@@ -1697,3 +1697,718 @@ svg {
         perspective: none;
     }
 }
+/* ============================================================
+   🌙 زر تبديل الوضع (فاتح / داكن)
+   ============================================================ */
+
+/* ═══ الزر ═══ */
+.theme-toggle {
+    position: fixed;
+    top: 24px;
+    right: 24px;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: var(--card);
+    border: 2px solid var(--purple);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 9999;
+    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+    box-shadow: 0 8px 24px rgba(124, 58, 237, 0.25);
+    overflow: hidden;
+}
+
+.theme-toggle:hover {
+    transform: scale(1.1) rotate(15deg);
+    box-shadow: 0 12px 32px rgba(124, 58, 237, 0.4);
+}
+
+.theme-icon {
+    position: absolute;
+    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+    color: var(--purple);
+}
+
+/* في الوضع الفاتح: الشمس تظهر */
+.icon-sun {
+    opacity: 1;
+    transform: rotate(0deg) scale(1);
+}
+
+.icon-moon {
+    opacity: 0;
+    transform: rotate(-90deg) scale(0.5);
+}
+
+/* في الوضع الداكن: القمر يظهر */
+:root.dark-mode .icon-sun {
+    opacity: 0;
+    transform: rotate(90deg) scale(0.5);
+}
+
+:root.dark-mode .icon-moon {
+    opacity: 1;
+    transform: rotate(0deg) scale(1);
+}
+
+.theme-toggle:hover .theme-icon {
+    color: var(--pink);
+}
+
+/* ═══ في الوضع الداكن — الزر نفسه ═══ */
+:root.dark-mode .theme-toggle {
+    background: #0A0A0A;
+    border-color: #98FB98;
+    box-shadow: 0 8px 24px rgba(152, 251, 152, 0.3);
+}
+
+:root.dark-mode .theme-icon {
+    color: #98FB98;
+}
+
+:root.dark-mode .theme-toggle:hover .theme-icon {
+    color: #B0E0E6;
+}
+
+/* ============================================================
+   🌙 الوضع الداكن (Dark Mode) — نسخة محدّثة
+   ============================================================ */
+:root.dark-mode {
+    /* الخلفيات — أسود ملكي */
+    --bg: #0A0A0A;
+    --bg-dots: #FF69B4;
+
+    /* البطاقات */
+    --card: #141414;
+    --card-hover: #1A1A1A;
+
+    /* التدرج الجديد — أزرق كوبالت + أخضر فسفوري */
+    --purple: #0047AB;
+    --purple-dark: #003D8F;
+    --purple-light: #98FB98;
+    --purple-soft: rgba(0, 71, 171, 0.15);
+
+    --pink: #FF69B4;
+    --pink-dark: #E754A0;
+    --pink-light: #FFB6D9;
+    --pink-soft: rgba(255, 105, 180, 0.15);
+
+    /* النصوص */
+    --text: #F5F5F0;
+    --text-soft: #B8B8B3;
+    --text-muted: #7A7A75;
+    --white: #FFFFFF;
+
+    /* الحدود */
+    --border: rgba(255, 255, 255, 0.08);
+
+    /* الظلال */
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.5);
+    --shadow-md: 0 8px 24px rgba(0, 71, 171, 0.25);
+    --shadow-lg: 0 20px 48px rgba(0, 71, 171, 0.35);
+    --shadow-xl: 0 32px 64px rgba(0, 71, 171, 0.45);
+}
+
+/* ═══ خلفية النقاط في الوضع الداكن ═══ */
+:root.dark-mode body::before {
+    background-image: radial-gradient(circle, #98FB98 1.6px, transparent 1.6px);
+    opacity: 0.18;
+}
+
+/* ⚠️ الشعار والاسم — ثابتين! لا تغيير */
+
+/* ═══ التدرجات — الأزرار والعناوين الثانوية فقط ═══ */
+:root.dark-mode .games-title,
+:root.dark-mode .stats-current,
+:root.dark-mode .age-card-num {
+    background: linear-gradient(135deg, #0047AB, #98FB98);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+}
+
+:root.dark-mode .stats-percent {
+    color: #FF69B4;
+}
+
+:root.dark-mode .stats-bar-fill {
+    background: linear-gradient(90deg, #0047AB, #98FB98);
+}
+
+:root.dark-mode .age-card::before {
+    background: linear-gradient(90deg, #0047AB, #98FB98);
+}
+
+:root.dark-mode .game-card::before {
+    background: linear-gradient(90deg, #0047AB, #98FB98);
+}
+
+:root.dark-mode .stats-board::before {
+    background: linear-gradient(90deg, #0047AB, #98FB98);
+}
+
+:root.dark-mode .footer-name {
+    background: linear-gradient(135deg, #0047AB, #98FB98);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+}
+
+/* ═══ شريط القسم ═══ */
+:root.dark-mode .section-banner {
+    background: linear-gradient(135deg, #0047AB, #98FB98);
+    color: #0A0A0A;
+    box-shadow: 0 12px 32px rgba(0, 71, 171, 0.4);
+}
+
+/* ═══ الأزرار ═══ */
+:root.dark-mode .back-btn,
+:root.dark-mode .game-card-btn,
+:root.dark-mode .result-btn.primary {
+    background: linear-gradient(135deg, #0047AB, #98FB98);
+    color: #0A0A0A;
+}
+
+:root.dark-mode .option-btn {
+    background: #1A1A1A;
+    color: #F5F5F0;
+}
+
+:root.dark-mode .option-btn:hover {
+    background: linear-gradient(135deg, #0047AB, #98FB98);
+    color: #0A0A0A;
+}
+
+/* ═══ البطاقات ═══ */
+:root.dark-mode .age-card {
+    background: var(--card);
+    color: var(--text);
+}
+
+:root.dark-mode .age-card:hover {
+    background: var(--card-hover);
+}
+
+:root.dark-mode .stats-board {
+    background: var(--card);
+}
+
+:root.dark-mode .game-card {
+    background: var(--card);
+}
+
+:root.dark-mode .game-card:hover {
+    background: var(--card-hover);
+}
+
+/* ═══ الترحيب ═══ */
+:root.dark-mode .welcome-message {
+    background: linear-gradient(135deg, rgba(0, 71, 171, 0.15), rgba(255, 105, 180, 0.15));
+    color: #FFB6D9;
+}
+
+:root.dark-mode .welcome-message:hover {
+    border-color: #98FB98;
+    box-shadow: 0 8px 20px rgba(152, 251, 152, 0.2);
+}
+
+/* ═══ الشريط السفلي ═══ */
+:root.dark-mode .footer {
+    border-top-color: rgba(152, 251, 152, 0.2);
+}
+
+/* ═══ زر تبديل الوضع ═══ */
+:root.dark-mode .theme-toggle {
+    background: #0A0A0A;
+    border-color: #98FB98;
+    box-shadow: 0 8px 24px rgba(152, 251, 152, 0.3);
+}
+
+:root.dark-mode .theme-icon {
+    color: #98FB98;
+}
+
+:root.dark-mode .theme-toggle:hover .theme-icon {
+    color: #FF69B4;
+}
+
+/* ═══ التمرير (Scrollbar) ═══ */
+:root.dark-mode ::-webkit-scrollbar-track {
+    background: #0A0A0A;
+}
+
+:root.dark-mode ::-webkit-scrollbar-thumb {
+    background: #0047AB;
+}
+
+:root.dark-mode ::-webkit-scrollbar-thumb:hover {
+    background: #98FB98;
+}
+/* ============================================================
+   ✨ شريط الفوائد المتحرك
+   ============================================================ */
+.benefits-ticker {
+    width: 100%;
+    max-width: 820px;
+    background: linear-gradient(135deg, var(--purple-soft), var(--pink-soft));
+    border-radius: 100px;
+    padding: 14px 0;
+    margin-bottom: 32px;
+    overflow: hidden;
+    position: relative;
+    border: 2px solid transparent;
+    transition: all 0.3s ease;
+    direction: ltr;
+}
+
+.benefits-ticker:hover {
+    border-color: var(--purple);
+    box-shadow: 0 8px 20px rgba(124, 58, 237, 0.15);
+}
+
+/* حافات متلاشية من الجانبين */
+.benefits-ticker::before,
+.benefits-ticker::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 60px;
+    z-index: 2;
+    pointer-events: none;
+}
+
+.benefits-ticker::before {
+    left: 0;
+    background: linear-gradient(90deg, var(--bg), transparent);
+}
+
+.benefits-ticker::after {
+    right: 0;
+    background: linear-gradient(-90deg, var(--bg), transparent);
+}
+
+.benefits-track {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    white-space: nowrap;
+    animation: tickerScroll 30s linear infinite;
+    padding-right: 24px;
+}
+
+.benefits-ticker:hover .benefits-track {
+    animation-play-state: paused;
+}
+
+@keyframes tickerScroll {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-50%);
+    }
+}
+
+.benefit-item {
+    font-family: var(--font-ar);
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--text);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: color 0.3s ease;
+}
+
+.benefit-sep {
+    font-family: var(--font-en);
+    font-size: 18px;
+    font-weight: 900;
+    color: var(--purple);
+    opacity: 0.6;
+}
+
+/* ═══ الوضع الداكن ═══ */
+:root.dark-mode .benefits-ticker {
+    background: linear-gradient(135deg, rgba(0, 71, 171, 0.15), rgba(176, 224, 230, 0.15));
+}
+
+:root.dark-mode .benefits-ticker:hover {
+    border-color: #98FB98;
+    box-shadow: 0 8px 20px rgba(152, 251, 152, 0.2);
+}
+
+:root.dark-mode .benefit-item {
+    color: #F5F5F0;
+}
+
+:root.dark-mode .benefit-sep {
+    color: #98FB98;
+}
+
+:root.dark-mode .benefits-ticker::before {
+    background: linear-gradient(90deg, #0A0A0A, transparent);
+}
+
+:root.dark-mode .benefits-ticker::after {
+    background: linear-gradient(-90deg, #0A0A0A, transparent);
+}
+
+/* ═══ Responsive ═══ */
+@media (max-width: 640px) {
+    .benefits-ticker {
+        padding: 12px 0;
+        margin-bottom: 24px;
+    }
+
+    .benefits-track {
+        gap: 18px;
+        animation-duration: 22s;
+    }
+
+    .benefit-item {
+        font-size: 13px;
+    }
+
+    .benefit-sep {
+        font-size: 15px;
+    }
+
+    .benefits-ticker::before,
+    .benefits-ticker::after {
+        width: 40px;
+    }
+}
+/* ============================================================
+   📊 الإحصائيات الجديدة — v2.0
+   ============================================================ */
+
+/* الرقم الأساسي */
+.stats-current {
+    font-family: var(--font-en);
+    font-size: 76px;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--purple), var(--pink));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    line-height: 1;
+    letter-spacing: -3px;
+}
+
+.stats-score-label {
+    font-family: var(--font-ar);
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text-muted);
+    margin-right: 8px;
+}
+
+/* صف النسبة + عدد الألعاب */
+.stats-percent-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 32px;
+    padding: 0 4px;
+}
+
+.stats-percent {
+    font-family: var(--font-en);
+    font-size: 28px;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--purple), var(--pink));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    line-height: 1;
+    letter-spacing: -1px;
+    padding: 0;
+}
+
+.stats-games-count {
+    font-family: var(--font-ar);
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text-muted);
+    background: var(--bg);
+    padding: 6px 14px;
+    border-radius: 100px;
+    border: 1.5px solid var(--border);
+}
+
+/* ═══ الوضع الداكن ═══ */
+:root.dark-mode .stats-current {
+    background: linear-gradient(135deg, #0047AB, #98FB98);
+    -webkit-background-clip: text;
+    background-clip: text;
+}
+
+:root.dark-mode .stats-percent {
+    background: linear-gradient(135deg, #0047AB, #98FB98);
+    -webkit-background-clip: text;
+    background-clip: text;
+}
+
+:root.dark-mode .stats-games-count {
+    background: #0A0A0A;
+    border-color: rgba(152, 251, 152, 0.2);
+    color: #98FB98;
+}
+
+:root.dark-mode .stats-score-label {
+    color: #B8B8B3;
+}
+
+/* ═══ Responsive ═══ */
+@media (max-width: 640px) {
+    .stats-current {
+        font-size: 54px;
+    }
+
+    .stats-score-label {
+        font-size: 16px;
+    }
+
+    .stats-percent {
+        font-size: 22px;
+    }
+
+    .stats-games-count {
+        font-size: 12px;
+        padding: 5px 10px;
+    }
+
+    .stats-percent-row {
+        margin-bottom: 24px;
+    }
+}
+/* ============================================================
+   🎯 بطاقات الفئة — النسخة النهائية
+   ============================================================ */
+
+/* ═══ البطاقة الأساسية ═══ */
+.age-card {
+    background: var(--card);
+    border-radius: 32px;
+    padding: 44px 32px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+    box-shadow: var(--shadow-md);
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    border: none;
+    font-family: inherit;
+}
+
+.age-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 6px;
+    background: linear-gradient(90deg, var(--purple), var(--pink));
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+
+.age-card:hover {
+    transform: translateY(-12px);
+    box-shadow: var(--shadow-xl);
+    background: var(--card-hover);
+}
+
+.age-card:hover::before {
+    opacity: 1;
+}
+
+/* ═══ الأيقونة — نبض ═══ */
+.age-card-icon {
+    font-size: 80px;
+    line-height: 1;
+    margin-bottom: 22px;
+    animation: iconPulseCard 2s ease-in-out infinite;
+    display: inline-block;
+}
+
+@keyframes iconPulseCard {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.15);
+    }
+}
+
+/* ═══ العنوان الرئيسي ═══ */
+.age-card-title {
+    font-family: var(--font-ar);
+    font-size: 28px;
+    font-weight: 900;
+    background: linear-gradient(135deg, var(--purple), var(--pink));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    margin-bottom: 14px;
+    line-height: 1.4;
+    letter-spacing: -1px;
+}
+
+/* ═══ النص الأول — لعبة تنموية / متقدمة ═══ */
+.age-card-desc {
+    font-family: var(--font-ar);
+    font-size: 18px;
+    font-weight: 800;
+    margin-bottom: 8px;
+    line-height: 1.5;
+    letter-spacing: 0.5px;
+}
+
+/* ═══ النص الثاني — العمر ═══ */
+.age-card-sub {
+    font-family: var(--font-ar);
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 26px;
+    line-height: 1.5;
+    letter-spacing: 0.3px;
+}
+
+/* ═══ الزر ═══ */
+.age-card-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 15px 36px;
+    background: linear-gradient(135deg, var(--purple), var(--purple-dark));
+    color: var(--white);
+    border-radius: 100px;
+    font-family: var(--font-ar);
+    font-size: 17px;
+    font-weight: 800;
+    transition: all 0.35s ease;
+    box-shadow: 0 8px 20px rgba(124, 58, 237, 0.28);
+    letter-spacing: 0.5px;
+}
+
+.age-card:hover .age-card-btn {
+    background: linear-gradient(135deg, var(--pink), var(--pink-dark));
+    box-shadow: 0 12px 28px rgba(236, 72, 153, 0.4);
+    transform: scale(1.06);
+}
+
+/* ============================================================
+   🌞 الوضع الفاتح — الألوان المخصصة
+   ============================================================ */
+
+/* بطاقة مرحلة البداية (تحت 16) */
+.age-card:first-child .age-card-desc {
+    color: #10B981;
+}
+
+.age-card:first-child .age-card-sub {
+    color: #3B82F6;
+}
+
+/* بطاقة مرحلة التحدي (فوق 16) */
+.age-card:last-child .age-card-desc {
+    color: #F59E0B;
+}
+
+.age-card:last-child .age-card-sub {
+    color: #EF4444;
+}
+
+/* ============================================================
+   🌙 الوضع الداكن — الألوان المخصصة
+   ============================================================ */
+
+:root.dark-mode .age-card {
+    background: var(--card);
+}
+
+:root.dark-mode .age-card:hover {
+    background: var(--card-hover);
+}
+
+:root.dark-mode .age-card-title {
+    background: linear-gradient(135deg, #0047AB, #98FB98);
+    -webkit-background-clip: text;
+    background-clip: text;
+}
+
+/* بطاقة مرحلة البداية في الوضع الداكن */
+:root.dark-mode .age-card:first-child .age-card-desc {
+    color: #98FB98;
+}
+
+:root.dark-mode .age-card:first-child .age-card-sub {
+    color: #B0E0E6;
+}
+
+/* بطاقة مرحلة التحدي في الوضع الداكن */
+:root.dark-mode .age-card:last-child .age-card-desc {
+    color: #FBBF24;
+}
+
+:root.dark-mode .age-card:last-child .age-card-sub {
+    color: #FB923C;
+}
+
+/* الزر في الوضع الداكن */
+:root.dark-mode .age-card-btn {
+    background: linear-gradient(135deg, #0047AB, #0A0A0A);
+    color: #F5F5F0;
+}
+
+:root.dark-mode .age-card:hover .age-card-btn {
+    background: linear-gradient(135deg, #98FB98, #0047AB);
+    color: #0A0A0A;
+    box-shadow: 0 12px 28px rgba(152, 251, 152, 0.35);
+}
+
+/* ============================================================
+   📱 Responsive
+   ============================================================ */
+@media (max-width: 640px) {
+    .age-card {
+        padding: 34px 24px;
+    }
+
+    .age-card-icon {
+        font-size: 64px;
+        margin-bottom: 18px;
+    }
+
+    .age-card-title {
+        font-size: 24px;
+    }
+
+    .age-card-desc {
+        font-size: 16px;
+    }
+
+    .age-card-sub {
+        font-size: 13px;
+    }
+
+    .age-card-btn {
+        padding: 13px 30px;
+        font-size: 15px;
+    }
+}
