@@ -1507,3 +1507,193 @@ svg {
         font-size: 16px;
     }
 }
+/* ============================================================
+   ✨ الإضافات القوية — v5.5
+   ============================================================ */
+
+/* ═══════════════════════════════════════════════════════════
+   1. 🔥 CINEMATIC LOADER
+   ═══════════════════════════════════════════════════════════ */
+.loader-overlay {
+    position: fixed;
+    inset: 0;
+    background: linear-gradient(135deg, #0A0A0A, #1A0A2E, #0A0A0A);
+    z-index: 99999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: opacity 0.8s ease, visibility 0.8s ease;
+}
+
+.loader-overlay.hidden-loader {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.loader-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+    animation: loaderFadeIn 0.6s ease;
+}
+
+@keyframes loaderFadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.loader-logo {
+    width: 140px;
+    height: 140px;
+    animation: loaderLogoSpin 3s ease-in-out infinite;
+    filter: drop-shadow(0 0 40px rgba(124, 58, 237, 0.8));
+}
+
+@keyframes loaderLogoSpin {
+    0% {
+        transform: rotate(0deg) scale(1);
+    }
+    50% {
+        transform: rotate(180deg) scale(1.1);
+    }
+    100% {
+        transform: rotate(360deg) scale(1);
+    }
+}
+
+.loader-title {
+    font-family: 'Space Grotesk', 'Segoe UI', sans-serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: #FFFFFF;
+    letter-spacing: 12px;
+    text-transform: uppercase;
+    animation: loaderTextPulse 1.5s ease-in-out infinite;
+}
+
+@keyframes loaderTextPulse {
+    0%, 100% {
+        opacity: 0.7;
+        letter-spacing: 12px;
+    }
+    50% {
+        opacity: 1;
+        letter-spacing: 14px;
+    }
+}
+
+.loader-bar {
+    width: 280px;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 100px;
+    overflow: hidden;
+    position: relative;
+}
+
+.loader-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #7C3AED, #EC4899);
+    border-radius: 100px;
+    transition: width 0.3s ease;
+    box-shadow: 0 0 20px rgba(124, 58, 237, 0.8);
+}
+
+.loader-percent {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.7);
+    letter-spacing: 3px;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   2. 🌈 COLOR SHIFTING TITLE
+   ═══════════════════════════════════════════════════════════ */
+.brand-title {
+    background-size: 300% 300%;
+    animation: titleShift 4s ease infinite;
+}
+
+@keyframes titleShift {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   3. 🎯 3D CARD TILT — على بطاقات الألعاب والفئة
+   ═══════════════════════════════════════════════════════════ */
+.game-card,
+.age-card {
+    transform-style: preserve-3d;
+    perspective: 1000px;
+    will-change: transform;
+    transition: transform 0.1s ease;
+}
+
+/* لمعة تتبع الماوس */
+.game-card::after,
+.age-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(
+        circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+        rgba(255, 255, 255, 0.15) 0%,
+        transparent 40%
+    );
+    border-radius: inherit;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 1;
+}
+
+.game-card:hover::after,
+.age-card:hover::after {
+    opacity: 1;
+}
+
+/* منع تأثير hover القديم عند 3D */
+.game-card:hover {
+    transform: none;
+}
+
+/* ═══ Responsive — إخفاء Loader على الشاشات الصغيرة؟ لا، نخليه ═══ */
+@media (max-width: 640px) {
+    .loader-logo {
+        width: 100px;
+        height: 100px;
+    }
+
+    .loader-title {
+        font-size: 20px;
+        letter-spacing: 8px;
+    }
+
+    .loader-bar {
+        width: 220px;
+    }
+
+    /* 3D على الجوال — خفيف */
+    .game-card,
+    .age-card {
+        perspective: none;
+    }
+}
