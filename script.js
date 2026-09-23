@@ -3471,3 +3471,193 @@ console.log('%c✅ التسلسل الزمني (كلمة "ثم" مميزة)', 'c
 console.log('%c✅ الذاكرة العكسية (كلمة "ثم" مميزة)', 'color:#10B981;font-weight:bold;');
 console.log('%c✅ ذاكرة الألوان (كلمة "ثم" مميزة)', 'color:#10B981;font-weight:bold;');
 console.log('%c═══════════════════════════════════════════════════════', 'color:#7C3AED;font-weight:bold;');
+/* ============================================================
+   ✨ الإضافات النهائية — v5.3
+   ============================================================ */
+
+/* ═══ 1. الترحيب الديناميكي (حسب الوقت) ═══ */
+function updateWelcomeMessage() {
+    const el = document.getElementById('welcome-message');
+    if (!el) return;
+
+    const hour = new Date().getHours();
+    let message = '';
+
+    if (hour >= 5 && hour < 12) {
+        message = '☀️ صباح الخير! جاهز لتدريب عقلك؟';
+    } else if (hour >= 12 && hour < 17) {
+        message = '🌤️ أهلاً! وقت التحدي الذهني';
+    } else if (hour >= 17 && hour < 22) {
+        message = '🌆 مساء الخير! درّب عقلك معنا';
+    } else {
+        message = '🌙 سهرة ممتعة! عقلك يستحق التدريب';
+    }
+
+    el.innerText = message;
+}
+
+/* ═══ 2. العدّاد المتحرك ═══ */
+function animateCounter(elementId, targetValue, duration = 1500) {
+    const el = document.getElementById(elementId);
+    if (!el) return;
+
+    const start = 0;
+    const startTime = performance.now();
+
+    function update(currentTime) {
+        const elapsed = currentTime - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        const currentValue = Math.round(start + (targetValue - start) * eased);
+
+        el.innerText = currentValue;
+
+        if (progress < 1) {
+            requestAnimationFrame(update);
+        } else {
+            el.innerText = targetValue;
+        }
+    }
+
+    requestAnimationFrame(update);
+}
+
+/* تحديث العدّاد في الإحصائيات */
+function updateStatsWithCounter() {
+    const stats = getStats();
+    const active = currentAgeGroup
+        ? GAMES.filter(g => currentAgeGroup === 'under16' ? g.under16 : g.over16)
+        : GAMES;
+
+    let total = 0;
+    active.forEach(g => {
+        if (stats[g.key] !== undefined) total += stats[g.key];
+    });
+
+    const percent = active.length > 0
+        ? Math.round((total / (active.length * 100)) * 100)
+        : 0;
+
+    // عدّاد الرقم
+    animateCounter('stats-current', total, 1200);
+
+    // عدّاد النسبة
+    const percentEl = document.getElementById('stats-percent');
+    if (percentEl) {
+        const pStart = performance.now();
+        const pDuration = 1200;
+
+        function updatePercent(t) {
+            const elapsed = t - pStart;
+            const progress = Math.min(elapsed / pDuration, 1);
+            const eased = 1 - Math.pow(1 - progress, 3);
+            const p = Math.round(eased * percent);
+            percentEl.innerText = p + '%';
+            if (progress < 1) requestAnimationFrame(updatePercent);
+        }
+        requestAnimationFrame(updatePercent);
+    }
+
+    // شريط التقدم
+    const fill = document.getElementById('stats-bar-fill');
+    if (fill) {
+        fill.style.width = '0%';
+        setTimeout(() => {
+            fill.style.width = percent + '%';
+        }, 100);
+    }
+
+    // باقي الإحصائيات (بدون عدّاد)
+    const maxTotal = active.length * 100;
+    const $ = id => document.getElementById(id);
+    if ($('stats-total')) $('stats-total').innerText = maxTotal;
+
+    let playedCount = 0, best = -1, bestName = '—', worst = 101, worstName = '—';
+    active.forEach(g => {
+        const s = stats[g.key];
+        if (s !== undefined) {
+            playedCount++;
+            if (s > best) { best = s; bestName = g.title; }
+            if (s < worst) { worst = s; worstName = g.title; }
+        }
+    });
+
+    if ($('stats-best')) $('stats-best').innerText = playedCount > 0 ? `${bestName} — ${best}` : '—';
+    if ($('stats-worst')) $('stats-worst').innerText = playedCount > 0 ? `${worstName} — ${worst}` : '—';
+}
+
+/* ═══ 3. شريط القسم (فوق 16 / تحت 16) ═══ */
+function renderSectionBanner() {
+    const gamesScreen = document.getElementById('games-screen');
+    if (!gamesScreen) return;
+
+    const old = gamesScreen.querySelector('.section-banner');
+    if (old) old.remove();
+
+    const isOver16 = currentAgeGroup === 'over16';
+
+    const banner = document.createElement('div');
+    banner.className = 'section-banner';
+
+    if (isOver16) {
+        banner.innerHTML = `
+            <span class="banner-icon">🎯</span>
+            <span class="banner-title">أنت في قسم فوق 16 سنة</span>
+            <span class="banner-subtitle">أعلى مستوى تحدي — هل أنت جاهز؟ 🔥</span>
+        `;
+    } else {
+        banner.innerHTML = `
+            <span class="banner-icon">🌱</span>
+            <span class="banner-title">أنت في قسم تحت 16 سنة</span>
+            <span class="banner-subtitle">مستوى تنموي ذكي — لنبدأ رحلة التعلم! ✨</span>
+        `;
+    }
+
+    const gamesIntro = gamesScreen.querySelector('.games-intro');
+    if (gamesIntro) {
+        gamesIntro.parentNode.insertBefore(banner, gamesIntro);
+    } else {
+        gamesScreen.appendChild(banner);
+    }
+}
+
+/* ═══ 4. تحديث selectAge لإضافة الشريط ═══ */
+const _originalSelectAge = window.selectAge;
+window.selectAge = function(group) {
+    if (typeof _originalSelectAge === 'function') {
+        _originalSelectAge(group);
+    }
+
+    setTimeout(() => {
+        renderSectionBanner();
+        updateStatsWithCounter();
+    }, 100);
+};
+
+/* ═══ 5. تحديث goHome لإعادة تشغيل الترحيب ═══ */
+const _originalGoHome = window.goHome;
+window.goHome = function() {
+    if (typeof _originalGoHome === 'function') {
+        _originalGoHome();
+    }
+    updateWelcomeMessage();
+    setTimeout(() => updateStatsWithCounter(), 100);
+};
+
+/* ═══ 6. عند تحميل الصفحة ═══ */
+document.addEventListener('DOMContentLoaded', () => {
+    updateWelcomeMessage();
+    setTimeout(() => updateStatsWithCounter(), 300);
+});
+
+/* ═══ 7. إعادة تشغيل الأصوات ═══ */
+if (typeof attachClickSound === 'function') {
+    attachClickSound();
+}
+
+console.log('%c✨ الإضافات النهائية محمّلة!', 'color:#EC4899;font-size:16px;font-weight:bold;');
+console.log('%c✅ الترحيب الديناميكي', 'color:#10B981;font-weight:bold;');
+console.log('%c✅ العدّاد المتحرك', 'color:#10B981;font-weight:bold;');
+console.log('%c✅ شريط القسم', 'color:#10B981;font-weight:bold;');
+console.log('%c✅ الشريط السفلي', 'color:#10B981;font-weight:bold;');
+console.log('%c✅ الأصوات معاد تشغيلها', 'color:#10B981;font-weight:bold;');
