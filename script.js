@@ -3661,3 +3661,149 @@ console.log('%c✅ العدّاد المتحرك', 'color:#10B981;font-weight:bo
 console.log('%c✅ شريط القسم', 'color:#10B981;font-weight:bold;');
 console.log('%c✅ الشريط السفلي', 'color:#10B981;font-weight:bold;');
 console.log('%c✅ الأصوات معاد تشغيلها', 'color:#10B981;font-weight:bold;');
+/* ============================================================
+   ✨ الإضافات القوية — v5.5
+   ============================================================ */
+
+/* ═══════════════════════════════════════════════════════════
+   1. 🔥 CINEMATIC LOADER
+   ═══════════════════════════════════════════════════════════ */
+function runCinematicLoader() {
+    const loader = document.getElementById('loader');
+    const fill = document.getElementById('loader-fill');
+    const percent = document.getElementById('loader-percent');
+
+    if (!loader || !fill || !percent) return;
+
+    let progress = 0;
+    const duration = 2200; // 2.2 ثانية
+    const interval = 30;
+    const step = 100 / (duration / interval);
+
+    const timer = setInterval(() => {
+        progress += step + Math.random() * 1.5; // عشوائي بسيط
+        if (progress >= 100) {
+            progress = 100;
+            clearInterval(timer);
+
+            // انتهى — انتظر لحظة ثم اخفِ
+            setTimeout(() => {
+                loader.classList.add('hidden-loader');
+                // شغل الصوت إذا موجود
+                if (typeof getAudioCtx === 'function') {
+                    try {
+                        const ctx = getAudioCtx();
+                        if (ctx) {
+                            const osc = ctx.createOscillator();
+                            const gain = ctx.createGain();
+                            osc.type = 'sine';
+                            osc.frequency.setValueAtTime(523.25, ctx.currentTime);
+                            osc.frequency.exponentialRampToValueAtTime(1046.5, ctx.currentTime + 0.3);
+                            gain.gain.setValueAtTime(0.08, ctx.currentTime);
+                            gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.4);
+                            osc.connect(gain);
+                            gain.connect(ctx.destination);
+                            osc.start(ctx.currentTime);
+                            osc.stop(ctx.currentTime + 0.4);
+                        }
+                    } catch (e) {}
+                }
+            }, 300);
+        }
+
+        fill.style.width = progress + '%';
+        percent.innerText = Math.round(progress) + '%';
+    }, interval);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   2. 🎯 3D CARD TILT
+   ═══════════════════════════════════════════════════════════ */
+function attach3DTilt() {
+    // نراقب البطاقات الجديدة اللي تُضاف ديناميكياً
+    const observer = new MutationObserver(() => {
+        const cards = document.querySelectorAll('.game-card, .age-card');
+        cards.forEach(card => {
+            if (card.dataset.tilt3d) return;
+            card.dataset.tilt3d = '1';
+            attachTiltToCard(card);
+        });
+    });
+
+    observer.observe(document.body, {
+        childList: true,
+        subtree: true
+    });
+
+    // نطبق على الموجود حالياً
+    document.querySelectorAll('.game-card, .age-card').forEach(card => {
+        if (card.dataset.tilt3d) return;
+        card.dataset.tilt3d = '1';
+        attachTiltToCard(card);
+    });
+}
+
+function attachTiltToCard(card) {
+    const MAX_TILT = 8; // درجات
+
+    card.addEventListener('mousemove', (e) => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+
+        const rotateX = ((y - centerY) / centerY) * -MAX_TILT;
+        const rotateY = ((x - centerX) / centerX) * MAX_TILT;
+
+        // النسبة المئوية للماوس (للمعة)
+        const percentX = (x / rect.width) * 100;
+        const percentY = (y / rect.height) * 100;
+
+        card.style.setProperty('--mouse-x', percentX + '%');
+        card.style.setProperty('--mouse-y', percentY + '%');
+
+        card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-8px) scale(1.02)`;
+    });
+
+    card.addEventListener('mouseleave', () => {
+        card.style.transform = '';
+        card.style.setProperty('--mouse-x', '50%');
+        card.style.setProperty('--mouse-y', '50%');
+    });
+}
+
+/* ═══════════════════════════════════════════════════════════
+   3. 🌈 COLOR SHIFTING TITLE
+   ═══════════════════════════════════════════════════════════ */
+function enhanceColorShiftingTitle() {
+    const title = document.querySelector('.brand-title');
+    if (!title) return;
+
+    // نتأكد إن الخلفية موجودة
+    title.style.backgroundImage = 'linear-gradient(270deg, #7C3AED, #EC4899, #A78BFA, #F472B6, #7C3AED)';
+    title.style.backgroundSize = '300% 300%';
+    title.style.webkitBackgroundClip = 'text';
+    title.style.backgroundClip = 'text';
+    title.style.webkitTextFillColor = 'transparent';
+}
+
+/* ═══════════════════════════════════════════════════════════
+   🚀 التشغيل عند تحميل الصفحة
+   ═══════════════════════════════════════════════════════════ */
+document.addEventListener('DOMContentLoaded', () => {
+    // 1. العنوان المتغير
+    enhanceColorShiftingTitle();
+
+    // 2. الـ Loader
+    runCinematicLoader();
+
+    // 3. 3D Tilt
+    setTimeout(() => attach3DTilt(), 100);
+});
+
+console.log('%c✨ الإضافات القوية محمّلة!', 'color:#EC4899;font-size:16px;font-weight:bold;');
+console.log('%c✅ Cinematic Loader', 'color:#10B981;font-weight:bold;');
+console.log('%c✅ 3D Card Tilt', 'color:#10B981;font-weight:bold;');
+console.log('%c✅ Color Shifting Title', 'color:#10B981;font-weight:bold;');
